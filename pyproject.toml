@@ -59,6 +59,7 @@ Homepage = "https://github.com/ai-nurmamat/EDP"
 Documentation = "https://github.com/ai-nurmamat/EDP#readme"
 Repository = "https://github.com/ai-nurmamat/EDP.git"
 Issues = "https://github.com/ai-nurmamat/EDP/issues"
+Changelog = "https://github.com/ai-nurmamat/EDP/blob/master/CHANGELOG.md"
 
 [tool.setuptools.packages.find]
 where = ["src/python"]

@@ -154,7 +154,11 @@ edp/
 ├── examples/python/           # basic_usage.py
 ├── examples/notebooks/        # startup_funding.ipynb / football_score.ipynb
 ├── mcp/server.py              # MCP Server（暴露 EDP 给 AI 助手）
-└── docs/theory/references.md
+├── docs/theory/references.md
+├── CHANGELOG.md               # 变更记录
+├── CONTRIBUTING.md            # 贡献指南
+├── CODE_OF_CONDUCT.md         # 行为准则
+└── SECURITY.md                # 安全策略
 ```
 
 ---

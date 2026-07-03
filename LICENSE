@@ -1,6 +1,6 @@
 MIT License
 
-Copyright (c) 2026 SPAF Team
+Copyright (c) 2026 EDP Team
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -26,12 +26,10 @@ SOFTWARE.
 
 **This software is for ACADEMIC RESEARCH AND EDUCATIONAL PURPOSES ONLY.**
 
-- This software does not constitute any investment advice or gambling advice.
-- Sports prediction involves real financial risk. No system can guarantee profits.
-- Historical probability patterns do NOT guarantee future results.
-- All prediction activities have negative expected value (EV) by design.
-- NEVER wager money you cannot afford to lose.
+- This software does NOT constitute any investment advice, decision-making advice,
+  betting/gambling advice, or financial planning advice.
+- All probabilities are estimates with significant uncertainty; historical
+  probability patterns do NOT guarantee future results.
 - Users bear full responsibility for their own decisions.
-- The authors are not responsible for any losses incurred through use of this software.
+- The authors are NOT responsible for any losses incurred through use of this software.
 - Please comply with laws and regulations in your jurisdiction.
-- If you or someone you know has a gambling problem, seek professional help immediately.

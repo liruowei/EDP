@@ -1,0 +1,31 @@
+# CODEOWNERS — automatic review request routing
+# https://docs.github.com/en/repositories/managing-your-repositorys-settings-and-features/customizing-your-repository/about-code-owners
+#
+# Each line: <pattern>  <owner(s)>
+# Owners can be @username or @org/team-slug.
+
+# Default owners — everything not matched below
+*                           @ai-nurmamat
+
+# Core framework (authoritative V2.0 implementation)
+/src/python/                @ai-nurmamat
+/mcp/                       @ai-nurmamat
+
+# Tests & examples
+/tests/                     @ai-nurmamat
+/examples/                  @ai-nurmamat
+
+# Documentation & governance
+/docs/                      @ai-nurmamat
+/README.md                  @ai-nurmamat
+/CHANGELOG.md               @ai-nurmamat
+/CONTRIBUTING.md            @ai-nurmamat
+/SECURITY.md                @ai-nurmamat
+/.github/                   @ai-nurmamat
+
+# Build & packaging
+/pyproject.toml             @ai-nurmamat
+/package.json               @ai-nurmamat
+
+# Legacy (V1) TypeScript port — frozen, not actively upgraded
+/src/js/                    @ai-nurmamat

@@ -4,8 +4,8 @@ EDP V2.0 测试套件 — 概率引擎与顶层接口
 ⚠️ 本测试仅供学术研究验证，不构成任何决策建议。
 """
 
-import sys
 import os
+import sys
 from datetime import datetime, timedelta
 
 # 将 src/python 加入路径（包名 edp）
@@ -13,41 +13,43 @@ sys.path.insert(0, os.path.join(os.path.dirname(__file__), "..", "..", "src", "p
 
 # 以 edp 包名加载
 import importlib.util
+
 _spec = importlib.util.spec_from_file_location(
     "edp",
     os.path.join(os.path.dirname(__file__), "..", "..", "src", "python", "__init__.py"),
-    submodule_search_locations=[os.path.join(os.path.dirname(__file__), "..", "..", "src", "python")],
+    submodule_search_locations=[
+        os.path.join(os.path.dirname(__file__), "..", "..", "src", "python")
+    ],
 )
 edp_module = importlib.util.module_from_spec(_spec)
 sys.modules["edp"] = edp_module
 _spec.loader.exec_module(edp_module)
 
-from edp import (
+from edp import (  # noqa: E402
     EDP,
-    GenericDomain,
-    Outcome,
-    Quote,
-    Evidence,
-    Snapshot,
-    EventGraph,
-    ProbabilityEngine,
-    OnlineAggregator,
-    FlowAmplificationEngine,
-    DomainAwarenessEngine,
     AllocationEngine,
     AllocationLeg,
-    CalibrationEngine,
     BayesianPrior,
-    FlowDirection,
-    RiskTier,
-    ConformalEngine,
+    CalibrationEngine,
     ConformalConfig,
+    ConformalEngine,
+    DomainAwarenessEngine,
+    EventGraph,
+    Evidence,
+    FlowAmplificationEngine,
+    FlowDirection,
+    GenericDomain,
+    OnlineAggregator,
+    Outcome,
+    ProbabilityEngine,
+    Quote,
+    Snapshot,
 )
-
 
 # ----------------------------------------------------------------------
 # Layer 0: 核心数据类型
 # ----------------------------------------------------------------------
+
 
 def test_outcome_creation():
     o = Outcome(id="a", label="结果A")
@@ -111,6 +113,7 @@ def test_generic_domain():
 # Layer 1-3: 概率引擎
 # ----------------------------------------------------------------------
 
+
 def test_shin_normalization():
     engine = ProbabilityEngine()
     # 报价 2.0 / 2.0 → 概率 0.5 / 0.5
@@ -166,11 +169,12 @@ def test_glicko2_rating():
 # Layer 2: 在线聚合
 # ----------------------------------------------------------------------
 
+
 def test_online_aggregator_mlpoly():
     agg = OnlineAggregator({"algorithm": "mlpoly"})
     agg.initialize(["m1", "m2", "m3"])
     # m1 总是更准确
-    for t in range(20):
+    for _ in range(20):
         preds = {"m1": 0.7, "m2": 0.5, "m3": 0.3}
         agg.predict(preds)
         agg.update(preds, 0.7)  # 实际值 0.7
@@ -182,7 +186,7 @@ def test_online_aggregator_mlpoly():
 def test_online_aggregator_ewa():
     agg = OnlineAggregator({"algorithm": "ewa", "eta": 2.0})
     agg.initialize(["a", "b"])
-    for t in range(10):
+    for _ in range(10):
         preds = {"a": 0.9, "b": 0.1}
         agg.predict(preds)
         agg.update(preds, 0.9)
@@ -194,6 +198,7 @@ def test_online_aggregator_ewa():
 # Layer 3: 流向倍增
 # ----------------------------------------------------------------------
 
+
 def test_flow_amplification():
     engine = ProbabilityEngine()
     flow_engine = FlowAmplificationEngine()
@@ -203,9 +208,7 @@ def test_flow_amplification():
     s1 = Snapshot(timestamp=t1, probabilities={"a": 0.5, "b": 0.5})
     flow_report = engine.analyze_flow(s0, s1)
     graph = EventGraph.chain(["a", "b"])
-    amp_report = flow_engine.calculate_amplification(
-        flow_report, {"a": 0.5, "b": 0.5}, graph
-    )
+    amp_report = flow_engine.calculate_amplification(flow_report, {"a": 0.5, "b": 0.5}, graph)
     assert len(amp_report.amplifications) == 2
     a_amp = next(a for a in amp_report.amplifications if a.outcome == "a")
     # a 流向上升（0.3→0.5），应有正向倍增
@@ -216,17 +219,32 @@ def test_flow_amplification():
 # Layer 4: 全域感知
 # ----------------------------------------------------------------------
 
+
 def test_domain_awareness():
     from edp import EvidenceSource, EvidenceType, SourceReliability
+
     engine = DomainAwarenessEngine()
     now = datetime.now()
     sources = [
-        EvidenceSource("s1", EvidenceType.MODEL, SourceReliability.B, now,
-                       {"probability": 0.7}, confidence=0.8),
-        EvidenceSource("s2", EvidenceType.SENSOR, SourceReliability.A, now,
-                       {"probability": 0.68}, confidence=0.9),
-        EvidenceSource("s3", EvidenceType.MODEL, SourceReliability.C, now,
-                       {"probability": 0.65}, confidence=0.5),
+        EvidenceSource(
+            "s1", EvidenceType.MODEL, SourceReliability.B, now, {"probability": 0.7}, confidence=0.8
+        ),
+        EvidenceSource(
+            "s2",
+            EvidenceType.SENSOR,
+            SourceReliability.A,
+            now,
+            {"probability": 0.68},
+            confidence=0.9,
+        ),
+        EvidenceSource(
+            "s3",
+            EvidenceType.MODEL,
+            SourceReliability.C,
+            now,
+            {"probability": 0.65},
+            confidence=0.5,
+        ),
     ]
     assessment = engine.assess_situation(sources)
     assert 0.6 < assessment.aggregate_probability < 0.8
@@ -238,19 +256,26 @@ def test_domain_awareness():
 # Layer 5: 资源分配
 # ----------------------------------------------------------------------
 
+
 def test_allocation_three_principles():
     engine = AllocationEngine()
     # 满足三原则：正向流向 + 正期望 + 合理结构
     leg = AllocationLeg(
-        outcome_id="a", probability=0.6, return_multiplier=2.0,
-        flow_direction="upward", confidence=0.8,
+        outcome_id="a",
+        probability=0.6,
+        return_multiplier=2.0,
+        flow_direction="upward",
+        confidence=0.8,
     )
     ok, _ = engine.validate_three_principles(leg)
     assert ok is True
     # 不满足：负期望
     leg = AllocationLeg(
-        outcome_id="a", probability=0.3, return_multiplier=1.5,
-        flow_direction="upward", confidence=0.8,
+        outcome_id="a",
+        probability=0.3,
+        return_multiplier=1.5,
+        flow_direction="upward",
+        confidence=0.8,
     )
     ok, _ = engine.validate_three_principles(leg)
     assert ok is False
@@ -286,6 +311,7 @@ def test_allocation_concentration_limit():
 # Layer 6: 校准
 # ----------------------------------------------------------------------
 
+
 def test_calibration_brier():
     calib = CalibrationEngine()
     result = calib.evaluate({"a": 0.7, "b": 0.3}, "a")
@@ -317,6 +343,7 @@ def test_calibration_curve():
 # ----------------------------------------------------------------------
 # 顶层 EDP 接口
 # ----------------------------------------------------------------------
+
 
 def test_edp_analyze_two_outcomes():
     domain = GenericDomain([Outcome("rain", "下雨"), Outcome("no_rain", "不下雨")])
@@ -369,6 +396,7 @@ def test_edp_warnings_contain_risk_disclaimer():
 # P0 修复：定向证据 log-odds 更新
 # ----------------------------------------------------------------------
 
+
 def test_directed_evidence_updates_target_outcome():
     """定向证据应只提升指向的结果，不影响其它结果相对比例。"""
     domain = GenericDomain([Outcome("a", "A"), Outcome("b", "B"), Outcome("c", "C")])
@@ -388,6 +416,7 @@ def test_directed_evidence_updates_target_outcome():
 # L7: 保形预测（2025 前沿）
 # ----------------------------------------------------------------------
 
+
 def test_conformal_split_prediction_set():
     """Split Conformal：校准后预测集应包含高概率结果。"""
     engine = ConformalEngine(ConformalConfig(alpha=0.1, method="split"))
@@ -402,12 +431,13 @@ def test_conformal_split_prediction_set():
 def test_conformal_aci_online_coverage():
     """ACI：在线更新后经验覆盖率不应低于目标（ACI 保证不欠覆盖）。"""
     import random
+
     random.seed(7)
     engine = ConformalEngine(ConformalConfig(alpha=0.1, method="aci", aci_gamma=0.01))
     # 稳定分布：a 以 0.7 概率发生
     preds_template = {"a": 0.7, "b": 0.3}
     for _ in range(200):
-        pset = engine.predict(preds_template)
+        engine.predict(preds_template)
         actual = "a" if random.random() < 0.7 else "b"
         engine.update(preds_template, actual)
     stats = engine.coverage_stats()
@@ -439,10 +469,12 @@ def test_conformal_update_returns_coverage():
 # Online Bayesian Stacking（Soft-Bayes）
 # ----------------------------------------------------------------------
 
+
 def test_online_bayesian_stacking_prefers_best_source():
     agg = OnlineAggregator({"algorithm": "online_bayesian_stacking", "obs_eta": 0.3})
     agg.initialize(["good", "bad"])
     import random
+
     random.seed(1)
     for _ in range(30):
         actual = 0.8
@@ -457,6 +489,7 @@ def test_online_bayesian_stacking_prefers_best_source():
 # Hyvärinen score
 # ----------------------------------------------------------------------
 
+
 def test_hyvarinen_score_penalizes_wrong_prediction():
     calib = CalibrationEngine()
     # 预测 a 概率高，实际 a 发生 → 低分（好）
@@ -470,9 +503,12 @@ def test_hyvarinen_score_penalizes_wrong_prediction():
 # 模型多样性（DTVW）
 # ----------------------------------------------------------------------
 
+
 def test_model_diversity():
-    from edp import EvidenceSource, EvidenceType, SourceReliability
     from datetime import datetime
+
+    from edp import EvidenceSource, EvidenceType, SourceReliability
+
     now = datetime.now()
     # 高冗余：三个源概率几乎相同
     redundant = [
@@ -496,6 +532,7 @@ def test_model_diversity():
 # ----------------------------------------------------------------------
 # EDP 顶层 L7 集成
 # ----------------------------------------------------------------------
+
 
 def test_edp_conformal_predict_returns_set():
     domain = GenericDomain([Outcome("a", "A"), Outcome("b", "B")])

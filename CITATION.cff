@@ -1,0 +1,31 @@
+cff-version: 1.2.0
+message: "If you use EDP in your research, please cite it as shown below."
+title: "EDP: Expectation Domain Perception Method — A Universal Domain-Aware Probabilistic Situation Awareness Framework"
+abstract: >-
+  EDP is a universal, domain-agnostic framework for probabilistic situation
+  awareness. Any problem that can be decomposed into "a set of possible
+  outcomes + a set of information sources" can be handled by EDP. It stacks
+  seven layers — data abstraction, probability extraction (Shin normalization),
+  inference (Bayesian / Glicko-2 / online aggregation), flow analysis, domain
+  awareness (opinion pooling / model diversity), resource allocation, calibration
+  (Brier / Log / Hyvärinen / CRPS), and conformal prediction (Split Conformal /
+  ACI / AgACI with finite-sample coverage guarantees). EDP is for academic
+  research and education only; it does not constitute investment, betting, or
+  decision-making advice.
+authors:
+  - name: "EDP Team"
+    alias: "EDP Team"
+version: "2.0.0"
+date-released: "2026-07-03"
+license: MIT
+repository-code: "https://github.com/ai-nurmamat/EDP"
+url: "https://github.com/ai-nurmamat/EDP"
+keywords:
+  - probabilistic forecasting
+  - bayesian inference
+  - conformal prediction
+  - situation awareness
+  - probability calibration
+  - decision framework
+  - academic research
+type: software

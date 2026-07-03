@@ -106,7 +106,7 @@ from .probability_engine import (
 )
 
 __version__ = "2.0.0"
-__author__ = "EDP Research Team"
+__author__ = "EDP Team"
 __license__ = "MIT"
 
 __all__ = [

@@ -32,8 +32,7 @@ if _SRC not in sys.path:
 import importlib.util  # noqa: E402
 
 _spec = importlib.util.spec_from_file_location(
-    "edp",
-    os.path.join(_SRC, "__init__.py"),
+    "edp", os.path.join(_SRC, "__init__.py"),
     submodule_search_locations=[_SRC],
 )
 _edp = importlib.util.module_from_spec(_spec)
@@ -42,15 +41,15 @@ _spec.loader.exec_module(_edp)
 
 from edp import (  # noqa: E402
     EDP,
-    CalibrationEngine,
-    ConformalConfig,
-    ConformalEngine,
-    DomainAwarenessEngine,
-    Evidence,
     GenericDomain,
-    OnlineAggregator,
     Outcome,
+    Evidence,
     ProbabilityEngine,
+    DomainAwarenessEngine,
+    OnlineAggregator,
+    CalibrationEngine,
+    ConformalEngine,
+    ConformalConfig,
 )
 
 
@@ -131,7 +130,9 @@ class EDPMCPServer:
             "warnings": result["warnings"],
         }
 
-    def calculate_true_probability(self, quotes: dict[str, float]) -> dict[str, Any]:
+    def calculate_true_probability(
+        self, quotes: dict[str, float]
+    ) -> dict[str, Any]:
         """Shin 归一化：从市场报价提取真实概率。"""
         result = self.prob_engine.calculate_true_probability(quotes)
         return {
@@ -145,10 +146,8 @@ class EDPMCPServer:
         self, sources: list[dict[str, Any]], prior_probability: float = 0.5
     ) -> dict[str, Any]:
         """多源情报融合。"""
-        from datetime import datetime
-
         from edp import EvidenceSource, EvidenceType, SourceReliability
-
+        from datetime import datetime
         src_objs = []
         for s in sources:
             try:
@@ -156,25 +155,19 @@ class EDPMCPServer:
             except ValueError:
                 etype = EvidenceType.UNKNOWN
             rel_weight = s.get("reliability_weight", 0.5)
-            rel = (
-                SourceReliability.A
-                if rel_weight >= 0.9
-                else (
-                    SourceReliability.B
-                    if rel_weight >= 0.7
-                    else (SourceReliability.C if rel_weight >= 0.5 else SourceReliability.D)
+            rel = SourceReliability.A if rel_weight >= 0.9 else (
+                SourceReliability.B if rel_weight >= 0.7 else (
+                    SourceReliability.C if rel_weight >= 0.5 else SourceReliability.D
                 )
             )
-            src_objs.append(
-                EvidenceSource(
-                    source_id=s["source_id"],
-                    evidence_type=etype,
-                    reliability=rel,
-                    timestamp=datetime.now(),
-                    data={"probability": s.get("probability", 0.5)},
-                    confidence=s.get("confidence", 0.7),
-                )
-            )
+            src_objs.append(EvidenceSource(
+                source_id=s["source_id"],
+                evidence_type=etype,
+                reliability=rel,
+                timestamp=datetime.now(),
+                data={"probability": s.get("probability", 0.5)},
+                confidence=s.get("confidence", 0.7),
+            ))
         assessment = self.domain_engine.assess_situation(
             src_objs, prior_probability=prior_probability
         )
@@ -206,7 +199,7 @@ class EDPMCPServer:
         agg = OnlineAggregator({"algorithm": algorithm})
         source_ids = list(predictions[0].keys())
         agg.initialize(source_ids)
-        for preds, actual in zip(predictions, actuals, strict=False):
+        for preds, actual in zip(predictions, actuals):
             agg.predict(preds)
             agg.update(preds, actual)
         return {

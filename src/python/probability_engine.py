@@ -6,7 +6,7 @@ EDP - 期望域感知方法 (Expectation Domain Perception Method) V2.0
     - Shin 归一化：从市场报价提取真实概率（Shin, 1992）
     - Beta-Binomial 共轭贝叶斯推断
     - 多源先验融合（对数池/线性池）
-    - Glicko-2 评级系统（Glickman, 2001）
+    - Glicko-2 评级系统（Glickman, 1999）
     - 概率流向分析（Moskowitz et al., 2012）
 
 数学基础：
@@ -14,8 +14,8 @@ EDP - 期望域感知方法 (Expectation Domain Perception Method) V2.0
                      with Insider Traders", Economic Journal, 102(411), 426-435.
     贝叶斯推断:      Gelman et al. (2013) - "Bayesian Data Analysis" (3rd ed.)
     时间序列动量:    Moskowitz, Ooi & Pedersen (2012)
-    Glicko-2 评级:   Mark Glickman (2001) - "Dynamic Paired Comparison
-                     Models with Stochastic Variances", J. Appl. Stat. 28:673-689
+    Glicko-2 评级:   Mark Glickman (1999) - "Parameter Estimation in Large
+                     Dynamic Paired Comparison Systems"
 
 ⚠️ 风险警示 ⚠️
     本模块仅供学术研究与教育用途。计算结果为统计推断产物，

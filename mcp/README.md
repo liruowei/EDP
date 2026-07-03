@@ -1,88 +1,166 @@
 # EDP MCP Server
 
-Model Context Protocol (MCP) server for the **EDP V2.0** framework.
-
-Exposes the seven-layer probabilistic situation-awareness engine to AI assistants
-(MCP-compatible clients such as Claude Desktop).
+Model Context Protocol (MCP) server for the EDP framework.
 
 ## ⚠️ Disclaimer
 
 **This server is for ACADEMIC RESEARCH AND EDUCATIONAL PURPOSES ONLY.**
 
-It does NOT constitute any investment advice, decision-making advice, betting/gambling
-advice, or financial planning advice. Users bear full responsibility for their own
-decisions. See the top-level [README](../README.md) for the full risk warning.
+This framework is for probability analysis and statistical research. No system can guarantee results.
 
----
-
-## Available Tools (V2.0)
-
-The server exposes six tools mapping to the EDP layers (L0 → L7):
-
-| Tool | Layer | Description |
-|------|-------|-------------|
-| `analyze_situation` | L0–L7 | One-shot full analysis (domain + evidence + conformal + allocation) |
-| `calculate_true_probability` | L1 | Shin normalization: extract true probabilities from quotes |
-| `assess_situation` | L4 | Multi-source intelligence fusion (linear/log-odds/Bayesian) |
-| `conformal_predict` | L7 | Conformal prediction set (finite-sample coverage guarantee) |
-| `online_aggregate` | L2 | Online expert aggregation (ML-Poly / EWA / Ridge / Bayesian Stacking) |
-| `evaluate_prediction` | L6 | Calibration scoring (Brier / Log / Hyvärinen) |
-
----
-
-## Usage
-
-### Run the server
+## Installation
 
 ```bash
-git clone https://github.com/ai-nurmamat/EDP.git
-cd EDP
-python mcp/server.py
+pip install edp-mcp-server
 ```
 
-> The server is a reference implementation. To plug it into a full MCP host,
-> wrap `EDPMCPServer.handle_tool_call` with your MCP SDK transport
-> (stdio / HTTP / SSE).
+## Configuration
 
-### Example: `analyze_situation`
+Add to your MCP client configuration (e.g., Claude Desktop):
 
 ```json
 {
-  "outcomes": [
-    {"id": "rain", "label": "下雨"},
-    {"id": "no_rain", "label": "不下雨"}
-  ],
-  "evidence": [
-    {"id": "model", "source_type": "model", "probability": 0.72,
-     "outcome_id": "rain", "confidence": 0.8}
-  ],
-  "budget": 0
+  "mcpServers": {
+    "edp": {
+      "command": "edp-mcp-server",
+      "args": []
+    }
+  }
 }
 ```
 
-Returns:
+## Available Tools
 
+### `calculate_true_probability`
+
+Calculate true probabilities from market quotes by removing the margin.
+
+**Parameters:**
+- `quotes` (object): Dictionary mapping outcomes to decimal values
+
+**Example:**
 ```json
 {
-  "probabilities": {"rain": 0.68, "no_rain": 0.32},
-  "prediction_set": ["rain"],
-  "coverage_target": 0.9,
-  "warnings": ["..."]
+  "quotes": {
+    "home": 1.50,
+    "draw": 4.20,
+    "away": 6.00
+  }
+}
+```
+
+**Returns:**
+```json
+{
+  "true_probabilities": {
+    "home": 0.632,
+    "draw": 0.226,
+    "away": 0.158
+  },
+  "margin": 0.054
 }
 ```
 
 ---
+
+### `analyze_flow`
+
+Analyze probability flow between two time points.
+
+**Parameters:**
+- `initial_probabilities` (object): Initial probability snapshot
+- `latest_probabilities` (object): Latest probability snapshot
+- `market_type` (string, optional): Market type (default: "1X2")
+
+**Returns:**
+- Flow report with direction and significance for each outcome
+
+---
+
+### `calculate_amplification`
+
+Calculate amplification effect for probability flows.
+
+**Parameters:**
+- `flow_report` (object): Flow analysis report
+- `gradient_map` (object): Map of outcomes to adjacent outcomes
+- `outcome_probabilities` (object): Current true probabilities
+- `domain_confidence` (object, optional): Confidence scores from domain awareness
+
+**Returns:**
+- Amplification report with scores and levels
+
+---
+
+### `validate_scheme`
+
+Validate a scheme against Three Principles and rules.
+
+**Parameters:**
+- `legs` (array): List of scheme legs
+- `multiplier` (integer, optional): Multiplier (default: 1)
+- `allocation_per_combination` (number, optional): Allocation amount (default: 2.0)
+
+**Returns:**
+- Validation result with any errors
+
+---
+
+### `generate_schemes`
+
+Generate optimized schemes within budget.
+
+**Parameters:**
+- `amplification_report` (object): Amplification report
+- `budget` (number): Total budget to allocate
+- `scenario_data` (object): Scenario information
+- `max_schemes` (integer, optional): Maximum schemes to generate (default: 10)
+
+**Returns:**
+- Scheme bundle with optimized schemes
+
+## Usage with AI Assistants
+
+Once configured, you can use natural language to interact with the EDP framework:
+
+```
+User: Calculate the true probability for quotes home 1.5, draw 4.2, away 6.0
+
+AI: I'll calculate the true probabilities by removing the market margin...
+
+[Calls calculate_true_probability tool]
+
+The true probabilities are:
+- Home: 63.2%
+- Draw: 22.6%
+- Away: 15.8%
+
+The market margin is 5.4%.
+```
 
 ## Development
 
 ```bash
-# Python setup (V2.0 authoritative implementation)
+# Clone repository
+git clone https://github.com/ai-nurmamat/EDP.git
+cd EDP/mcp
+
+# Install dependencies
 pip install -e ".[dev]"
 
-# List available tools
-python mcp/server.py
+# Run server
+python server.py
 ```
 
 ## License
 
-MIT License — see the [LICENSE](../LICENSE) file for details.
+MIT License - See LICENSE file for details.
+
+## Disclaimer
+
+**This server is for ACADEMIC RESEARCH AND EDUCATIONAL PURPOSES ONLY.**
+
+- This server does not constitute any investment advice or decision-making advice.
+- Any decisions made using this server are the user's sole responsibility.
+- The author is not responsible for any losses incurred through use of this server.
+- Please comply with laws and regulations in your jurisdiction.

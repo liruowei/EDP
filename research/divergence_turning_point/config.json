@@ -1,0 +1,18 @@
+{
+  "theme_source": "concept_ths",
+  "data_dir": "data/divergence_turning_point",
+  "theme_input": "data/theme_rotation/theme_rotation_1_3_5d_concept_ths_live.csv",
+  "daily": {
+    "horizon": 10,
+    "initial_train_days": 252,
+    "refit_every_days": 5,
+    "dashboard_top_n": 30,
+    "model": "logistic",
+    "include_breadth": true,
+    "breadth_top_n": 0
+  },
+  "intraday": {
+    "interval_seconds": 600,
+    "sleep_seconds": 0.35
+  }
+}

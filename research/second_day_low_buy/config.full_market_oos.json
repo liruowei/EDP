@@ -1,0 +1,60 @@
+{
+  "data": {
+    "start_date": "20250101",
+    "end_date": "20260629",
+    "adjust": "qfq",
+    "market_data_db": "data/market_data/edp_market_data.duckdb",
+    "market_data_log_dir": "data/market_data/logs",
+    "akshare_cache_dir": "data/market_data/akshare_cache",
+    "factor_types": ["qfq"],
+    "incremental_overlap_days": 0,
+    "request_interval_seconds": 0.03,
+    "max_stocks": 0,
+    "universe_cache": "data/second_day_low_buy/full_market/universe.csv",
+    "output_dir": "data/second_day_low_buy/full_market_oos"
+  },
+  "universe": {
+    "include_prefixes": ["0", "3", "6"],
+    "exclude_name_contains": ["ST", "退"]
+  },
+  "split": {
+    "train_end_date": "20251231",
+    "test_start_date": "20260101"
+  },
+  "backtest": {
+    "top_n_per_day": 10
+  },
+  "monitor": {
+    "end_date": "",
+    "iterations": 1,
+    "interval_seconds": 300,
+    "max_stocks": 0,
+    "top_n": 20,
+    "refresh_universe": false,
+    "output_dir": "data/second_day_low_buy/monitor",
+    "priority_score": 6,
+    "watch_score": 4,
+    "min_runup_for_watch": 0.5,
+    "min_amount_for_priority": 1000000000.0,
+    "strong_amount": 2000000000.0,
+    "strong_amplitude": 0.14,
+    "extreme_amplitude": 0.2,
+    "min_close_position_10d": 0.65,
+    "discount_low": -0.08,
+    "discount_high": -0.025
+  },
+  "rules": {
+    "min_close_runup_8d": 0.22,
+    "min_max_gain_8d": 0.09,
+    "min_signal_drop": -0.035,
+    "min_signal_amplitude": 0.075,
+    "min_turnover": 5.0,
+    "min_amount": 300000000.0,
+    "max_ma10_break_pct": 0.08,
+    "buy_band_pct": 0.008,
+    "deep_band_pct": 0.012,
+    "stop_buffer_pct": 0.015,
+    "max_entry_gap_pct": 0.03,
+    "exit_holding_days": 1
+  }
+}

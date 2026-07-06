@@ -83,3 +83,9 @@ site/
 # Package files
 *.tar.gz
 *.zip
+
+# EDP runtime data, market caches, and generated research outputs
+data/
+*.duckdb
+*.duckdb.wal
+*.duckdb.tmp

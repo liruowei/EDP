@@ -1,0 +1,16 @@
+{
+  "source": {
+    "theme_source": "concept_ths",
+    "horizon": 10,
+    "prefer_latest_validation": true,
+    "validation_dir": "data/divergence_turning_point/validation",
+    "rank_input": "data/divergence_turning_point/divergence_turning_10d_concept_ths_walk_forward_rank.csv",
+    "panel_input": "data/divergence_turning_point/divergence_turning_10d_concept_ths_live.csv"
+  },
+  "backtest": {
+    "holding_days": [3, 5, 10],
+    "rebalance_days": null,
+    "benchmark_top_n": 0,
+    "output_dir_template": "data/edp_turning_strategy/validation_{run_tag}"
+  }
+}

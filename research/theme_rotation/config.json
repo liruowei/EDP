@@ -1,0 +1,15 @@
+{
+  "theme_source": "concept_ths",
+  "start_date": "20240101",
+  "horizons": [1, 3, 5],
+  "min_history_rows": 80,
+  "dashboard_top_n": 20,
+  "model": "logistic",
+  "use_cache": true,
+  "refresh_list": false,
+  "include_breadth": true,
+  "sleep_seconds": 0.25,
+  "data_dir": "data/theme_rotation",
+  "dataset_output": "data/theme_rotation/theme_rotation_1_3_5d_concept_ths_live.csv",
+  "dashboard_output_dir": "data/theme_rotation/edp_daily_dashboard"
+}

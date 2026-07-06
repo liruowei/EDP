@@ -34,7 +34,12 @@ classifiers = [
     "Topic :: Education",
     "Typing :: Typed"
 ]
-dependencies = []
+dependencies = [
+    "akshare>=1.16.0",
+    "duckdb>=1.0.0",
+    "pandas>=2.0.0",
+    "requests>=2.0.0",
+]
 
 [project.optional-dependencies]
 dev = [
@@ -59,6 +64,13 @@ Homepage = "https://github.com/ai-nurmamat/EDP"
 Documentation = "https://github.com/ai-nurmamat/EDP#readme"
 Repository = "https://github.com/ai-nurmamat/EDP.git"
 Issues = "https://github.com/ai-nurmamat/EDP/issues"
+
+[project.scripts]
+edp = "edp_cli:main"
+
+[tool.setuptools]
+package-dir = {"" = "src/python"}
+py-modules = ["edp_cli"]
 
 [tool.setuptools.packages.find]
 where = ["src/python"]
